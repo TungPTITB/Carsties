@@ -1,3 +1,4 @@
+'use client'
 import { useParamsStore } from '@/hooks/useParamsStore';
 import React, { useState } from 'react'
 import { FaSearch } from 'react-icons/fa';
