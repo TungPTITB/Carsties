@@ -1,5 +1,4 @@
 import { create } from "zustand"
-
 type State = {
     pageNumber: number
     pageSize: number
@@ -8,6 +7,8 @@ type State = {
     searchValue: string
     orderBy: string
     filterBy: string
+    seller?: string
+    winner?: string
 }
 
 type Actions = {
@@ -15,7 +16,6 @@ type Actions = {
     reset: () => void
     setSearchValue: (value: string) => void
 }
-
 const initialState: State = {
     pageNumber: 1,
     pageSize: 12,
@@ -23,12 +23,13 @@ const initialState: State = {
     searchTerm: '',
     searchValue: '',
     orderBy: 'make',
-    filterBy: 'live'
+    filterBy: 'live',
+    seller: undefined,
+    winner: undefined
 }
 
 export const useParamsStore = create<State & Actions>()((set) => ({
     ...initialState,
-
     setParams: (newParams: Partial<State>) => {
         set((state) => {
             if (newParams.pageNumber) {
@@ -38,9 +39,7 @@ export const useParamsStore = create<State & Actions>()((set) => ({
             }
         })
     },
-
     reset: () => set(initialState),
-
     setSearchValue: (value: string) => {
         set({searchValue: value})
     }
