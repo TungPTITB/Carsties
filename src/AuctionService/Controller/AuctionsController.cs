@@ -75,31 +75,27 @@ namespace AuctionService.Controller
         }
 
         [Authorize]
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
-        {
-            var auction = await _context.Auctions
-                            .Include(x => x.Item)
-                            .FirstOrDefaultAsync(x => x.Id == id);
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
+    {
+        var auction = await _context.Auctions.Include(x => x.Item)
+            .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (auction == null) return NotFound();
+        if (auction == null) return NotFound();
 
-            if(auction.Seller != User.Identity.Name) return Forbid();
+        // TODO: check seller == username
+        if(auction.Seller != User.Identity.Name) return Forbid();
 
-            auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
-            auction.Item.Model = updateAuctionDto.Model ?? auction.Item.Model;
-            auction.Item.Color = updateAuctionDto.Color ?? auction.Item.Color;
-            auction.Item.Mileage = updateAuctionDto.Mileage ?? auction.Item.Mileage;
-            auction.Item.Year = updateAuctionDto.Year ?? auction.Item.Year;
-
-            await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
-
-            var result = await _context.SaveChangesAsync() > 0;
-
-            if (result) return Ok();
-
-            return BadRequest("Problem saving changes");
-        }
+        auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
+        auction.Item.Model = updateAuctionDto.Model ?? auction.Item.Model;
+        auction.Item.Color = updateAuctionDto.Color ?? auction.Item.Color;
+        auction.Item.Mileage = updateAuctionDto.Mileage ?? auction.Item.Mileage;
+        auction.Item.Year = updateAuctionDto.Year ?? auction.Item.Year;
+        await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
+        var result = await _context.SaveChangesAsync() > 0;
+        if (result) return Ok();
+        return BadRequest("Problem saving changes");
+    }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAuction(Guid id)
