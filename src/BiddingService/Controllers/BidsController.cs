@@ -86,7 +86,7 @@ namespace BiddingService.Controllers
         {
             var bids = await DB.Find<Bid>()
                 .Match(a => a.AuctionId == auctionId)
-                .Sort(b => b.Descending(a => a.BidDate))
+                .Sort(b => b.Descending(a => a.BidTime))
                 .ExecuteAsync();
 
             return bids.Select(_mapper.Map<BidDto>).ToList();
