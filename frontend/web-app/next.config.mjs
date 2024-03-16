@@ -8,7 +8,8 @@ const nextConfig = {
             'cdn.pixabay.com',
             'cafefcdn.com'
         ]
-    }
+    },
+    output: 'standalone'
 };
 
 export default nextConfig;
